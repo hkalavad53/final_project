@@ -4,15 +4,15 @@
 
 ### Downloaded the chromosomal level assembly of Opsanus beta (Gulf Toadfish) from NCBI
 
-``` cd /project/daane/hussain/final_project ```
+``` cd /project/daane/hussain/final_project
 
-``` mkdir raw_data ```
+mkdir raw_data
 
-``` wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/040/802/735/GCA_040802735.1_UM_OBeta_2.1/GCA_040802735.1_UM_OBeta_2.1_genomic.fna.gz ```
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/040/802/735/GCA_040802735.1_UM_OBeta_2.1/GCA_040802735.1_UM_OBeta_2.1_genomic.fna.gz
 
-``` gunzip https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/040/802/735/GCA_040802735.1_UM_OBeta_2.1/GCA_040802735.1_UM_OBeta_2.1_genomic.fna.gz ```
+gunzip https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/040/802/735/GCA_040802735.1_UM_OBeta_2.1/GCA_040802735.1_UM_OBeta_2.1_genomic.fna.gz
 
-``` mv GCA_040802735.1_UM_OBeta_2.1_genomic.fna obeta_ncbi.fna``` 
+mv GCA_040802735.1_UM_OBeta_2.1_genomic.fna obeta_ncbi.fna ``` 
 
 ### Copied existing data files for O. beta hifi reads
 
