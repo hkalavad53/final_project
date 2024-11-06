@@ -1,6 +1,6 @@
 # final_project
 
-## Raw Data and Existing Data files
+## Raw Data and Existing Data files (not committed to repository due to huge file sizes)
 
 ### Downloaded the chromosomal level assembly of Opsanus beta (Gulf Toadfish) from NCBI
 
