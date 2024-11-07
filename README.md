@@ -35,7 +35,6 @@ cp /project/daane/hussain/assemblies/o_beta/scaffold/ragtag_output/ragtag.scaffo
 
 ### Convert .bam to .fastq
 
-Ran 
 ```
 sbatch bam2fastq.sh
 ```
@@ -52,3 +51,4 @@ sbatch bam2fastq.sh
 bam2fastq raw_data/m84100_231231_051457_s3.hifi_reads.bc1002.bam -o obeta
 ```
 
+### Sca
