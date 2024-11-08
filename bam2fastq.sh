@@ -7,5 +7,5 @@
 #SBATCH --mail-user=hskalavad@gmail.com
 #SBATCH --mail-type=ALL
 
-bam2fastq raw_data/m84100_231231_051457_s3.hifi_reads.bc1002.bam -o obeta
+bam2fastq /project/daane/hussain/final_project/raw_data/m84100_231231_051457_s3.hifi_reads.bc1002.bam -o obeta
 
