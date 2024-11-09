@@ -1,0 +1,15 @@
+Fri Nov  8 22:02:37 2024 --- VERSION: RagTag v2.1.0
+Fri Nov  8 22:02:37 2024 --- CMD: ragtag.py scaffold /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa -u
+Fri Nov  8 22:02:37 2024 --- INFO: Mapping the query genome to the reference genome
+Fri Nov  8 22:02:37 2024 --- INFO: Running: minimap2 -x asm5 -t 1 /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.asm.paf 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.asm.paf.log
+Sat Nov  9 00:57:10 2024 --- INFO: Finished running : minimap2 -x asm5 -t 1 /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.asm.paf 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.asm.paf.log
+Sat Nov  9 00:57:10 2024 --- INFO: Reading whole genome alignments
+Sat Nov  9 00:57:11 2024 --- INFO: Filtering and merging alignments
+Sat Nov  9 00:57:12 2024 --- INFO: Ordering and orienting query sequences
+Sat Nov  9 00:57:12 2024 --- INFO: Writing scaffolds
+Sat Nov  9 00:57:12 2024 --- INFO: Writing: /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.agp
+Sat Nov  9 00:57:23 2024 --- INFO: Running: ragtag_agp2fa.py /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.agp /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.fasta 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.err
+Sat Nov  9 00:57:49 2024 --- INFO: Finished running : ragtag_agp2fa.py /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.agp /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.fasta 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.err
+Sat Nov  9 00:57:49 2024 --- INFO: Running: ragtag_stats.py /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.agp /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.confidence.txt > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.stats 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.err
+Sat Nov  9 00:57:49 2024 --- INFO: Finished running : ragtag_stats.py /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.agp /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.confidence.txt > /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.stats 2> /project/daane/hussain/final_project/ragtag/ragtag_output/ragtag.scaffold.err
+Sat Nov  9 00:57:49 2024 --- INFO: Goodbye
