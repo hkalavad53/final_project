@@ -5,6 +5,8 @@
 ### Downloaded the chromosomal level assembly of Opsanus beta (Gulf Toadfish) from NCBI
 
 ```
+mkdir /project/daane/hussain/final_project
+
 cd /project/daane/hussain/final_project
 
 mkdir raw_data
@@ -54,6 +56,8 @@ bam2fastq /project/daane/hussain/final_project/raw_data/m84100_231231_051457_s3.
 ### Run Hifiasm to assemble the hifi reads
 
 ```
+cd /project/daane/hussain/final_project
+mkdir hifiasm
 cd hifiasm
 sbatch hifiasm.sh
 ```
@@ -68,4 +72,25 @@ sbatch hifiasm.sh
 #SBATCH --mail-type=ALL
 
 /project/daane/hussain/programs/hifiasm/hifiasm -o obeta.asm -t 10 /project/daane/hussain/final_project/raw_data/obeta.fastq.gz
+```
+
+### Run Ragtag to scaffold the assembly on Chromosomal-level O. beta genome obtained from NCBI
+
+```
+cd /project/daane/hussain/final_project
+mkdir ragtag
+cd ragtag
+sbatch ragtag.sh
+```
+```
+#!/bin/bash
+#SBATCH -J hifiasm
+#SBATCH -o hifiasm.%j
+#SBATCH -t 144:00:00
+#SBATCH -N 1 -n 10
+#SBATCH --mem=120G
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
+
+ragtag_scaffold.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa /project/daane/hussain/final_project/hifiasm/obeta.asm.bp.p_ctg.fa -u
 ```
