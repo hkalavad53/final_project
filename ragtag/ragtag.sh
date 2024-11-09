@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J hifiasm
-#SBATCH -o hifiasm.%j
+#SBATCH -J ragtag
+#SBATCH -o ragtag.%j
 #SBATCH -t 144:00:00
 #SBATCH -N 1 -n 10
 #SBATCH --mem=120G
