@@ -122,3 +122,39 @@ compleasm run -a /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi
 
 compleasm run -a /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama.fa -o compleasm_obeta_ragtag_tama -l actinopterygii_odb10
 ```
+
+## Create Pairwise Sequence Alignment with Cottoperca gobio genome using make_lastz_chains pipeline from Michael Hiller Lab
+
+### Check for softmask percentage
+
+```
+cd /project/daane/hussain/final_project
+mkdir repeatmask
+cd repeatmask
+sbatch softmask_percentage.sh
+```
+```
+#!/bin/bash
+#SBATCH -J softmask_percentage
+#SBATCH -o softmask_percentage.%j
+#SBATCH -t 144:00:00
+#SBATCH -N 1 -n 1
+#SBATCH --mem=25G
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
+
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa
+
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama.fa
+
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa
+```
+
+The genome obtained from NCBI is already softmasked and the ragtag assembly using T. amazonica as reference has previously been softmasked and ran through the make_lastz_chains pipeline. Here, I will use windowmasker to softmask repeat sequences in ragtag assembly which used NCBI's O. beta genome as reference.
+
+```
+sbatch windowmasker.sh
+```
+```
+#
+```
