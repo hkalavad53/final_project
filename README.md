@@ -180,3 +180,25 @@ RepeatModeler -database obeta -threads 40 -LTRStruct
 
 RepeatMasker -lib obeta-families.fa -pa 28 -e rmblast -xsmall -dir . -s obeta_ragtag_ncbi.fa
 ```
+
+### Run make_lastz_chains pipeline by Michael Hiler Lab to generate pairwise alignments between O. beta and Cottoperca gobio
+
+```
+cd /project/daane/hussain/final_project/
+mkdir make_lastz_chains
+cd make_lastz_chains/
+mkdir obeta_ncbi
+mkdir obeta_ragtag_tama
+mkdir obeta_ragtag_ncbi
+```
+
+### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
+
+make_lastz_chains has previously been run on this genome so I am copying the files here but not staging them on GitHub due to huge file size.
+
+```
+cp -r /project/daane/hussain/repeatmask/batrachoidiformes/opsanus_beta/chain_obet_cgob/ .
+```
+
+#### Opsanus beta genome obtained from NCBI:
+
