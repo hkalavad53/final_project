@@ -9,5 +9,5 @@
 
 module add Nextflow/21.10.6
 
-python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoperca_gobio Opsanus_beta /project/daane/hussain/final_project/raw_data/cgob_dna_sm.fa /project/daane/hussain/final_project/obeta_ncbi/obeta_ncbi_sm.fa --project_dir chain_obeta_cgob --executor slurm --executor_queuesize 210 --seq1_chunk 50000000 --seq2_chunk 10000000
+python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoperca_gobio Opsanus_beta /project/daane/hussain/final_project/raw_data/cgob_dna_sm.fa /project/daane/hussain/final_project/make_lastz_chains/obeta_ncbi/obeta_ncbi_sm.fa --project_dir chain_obeta_cgob --executor slurm --executor_queuesize 210 --seq1_chunk 50000000 --seq2_chunk 10000000
 
