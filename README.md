@@ -131,6 +131,7 @@ compleasm run -a /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama
 cd /project/daane/hussain/final_project
 mkdir repeatmask
 cd repeatmask
+cp ~/Python/softmask_percentages.py .
 sbatch softmask_percentage.sh
 ```
 ```
@@ -150,11 +151,32 @@ python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/ob
 python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa
 ```
 
-The genome obtained from NCBI is already softmasked and the ragtag assembly using T. amazonica as reference has previously been softmasked and ran through the make_lastz_chains pipeline. Here, I will use windowmasker to softmask repeat sequences in ragtag assembly which used NCBI's O. beta genome as reference.
+The genome obtained from NCBI is already softmasked and the ragtag assembly using T. amazonica as reference has previously been softmasked and ran through the make_lastz_chains pipeline. Here, I will use Repeatmasker to softmask repeat sequences in ragtag assembly which used NCBI's O. beta genome as reference.
 
 ```
-sbatch windowmasker.sh
+mkdir obeta_ragatg_ncbi
+cd obeta_ragatg_ncbi
+cp /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa .
+module load RepeatModeler/2.0.4-foss-2022a
+BuildDatabase --name obeta obeta_ragtag_ncbi.fa
+sbatch repeatmask.sh
 ```
 ```
-#
+#!/bin/bash
+#SBATCH -J repeatmask
+#SBATCH -o repeatmask.o%j
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
+#SBATCH -N 1
+#SBATCH -n 28
+#SBATCH --mem=60G
+#SBATCH -t 106:52:53
+
+module load RepeatModeler/2.0.4-foss-2022a
+
+module load RepeatMasker/4.1.5-foss-2022a
+
+RepeatModeler -database obeta -threads 40 -LTRStruct
+
+RepeatMasker -lib obeta-families.fa -pa 28 -e rmblast -xsmall -dir . -s obeta_ragtag_ncbi.fa
 ```
