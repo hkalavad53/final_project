@@ -7,9 +7,9 @@
 #SBATCH --mail-user=hskalavad@gmail.com
 #SBATCH --mail-type=ALL
 
-python /project/daane/hussain/Python/softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa
 
-python /project/daane/hussain/Python/softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama.fa
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama.fa
 
-python /project/daane/hussain/Python/softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa
+python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa
 
