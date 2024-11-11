@@ -197,8 +197,31 @@ mkdir obeta_ragtag_ncbi
 make_lastz_chains has previously been run on this genome so I am copying the files here but not staging them on GitHub due to huge file size.
 
 ```
+cd /project/daane/hussain/final_project/obeta_ragtag_tama/
 cp -r /project/daane/hussain/repeatmask/batrachoidiformes/opsanus_beta/chain_obet_cgob/ .
 ```
 
 #### Opsanus beta genome obtained from NCBI:
 
+```
+cd /project/daane/hussain/final_project/obeta_ncbi/
+touch chain_obet_cgob.sh
+cp /project/daane/hussain/repeatmask/notothenioids/cottoperca_gobio/cgob_dna_sm.fa /project/daane/hussain/final_project/raw_data/.
+# make_lastz_chains pipeline doesn't like periods or just long headers in general in fasta files
+python fasta_rename_remove_period.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa obeta_ncbi_sm.fa
+sbatch chain_obet_cgob.sh
+```
+```
+#!/bin/bash
+#SBATCH -J chain_obeta_cgob
+#SBATCH -o chain_obeta_cgob.%j
+#SBATCH -t 120:00:00
+#SBATCH -N 1 -n 1
+#SBATCH --mem=10G
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
+
+module add Nextflow/21.10.6
+
+python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoperca_gobio Opsanus_beta /project/daane/hussain/final_project/raw_data/cgob_dna_sm.fa /project/daane/hussain/final_project/obeta_ncbi/obeta_ncbi_sm.fa --project_dir chain_obeta_cgob --executor slurm --executor_queuesize 210 --seq1_chunk 50000000 --seq2_chunk 10000000
+```
