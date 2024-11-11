@@ -192,7 +192,7 @@ mkdir obeta_ragtag_tama
 mkdir obeta_ragtag_ncbi
 ```
 
-### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
+#### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
 
 make_lastz_chains has previously been run on this genome so I am copying the files here but not staging them on GitHub due to huge file size.
 
