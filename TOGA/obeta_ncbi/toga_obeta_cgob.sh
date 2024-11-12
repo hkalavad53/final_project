@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J chain_<>_gacul
-#SBATCH -o chain_<>_gacul.%j
+#SBATCH -J chain_obeta_cgob
+#SBATCH -o chain_obeta_cgob.%j
 #SBATCH -t 120:00:00
 #SBATCH -N 1 -n 1
 #SBATCH --mem=10G
