@@ -151,7 +151,19 @@ python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/ob
 python ./softmask_percentage.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi.fa
 ```
 
-The genome obtained from NCBI is already softmasked and the ragtag assembly using T. amazonica as reference has previously been softmasked and ran through the make_lastz_chains pipeline. Here, I will use Repeatmasker to softmask repeat sequences in ragtag assembly which used NCBI's O. beta genome as reference.
+#### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
+
+The ragtag assembly using T. amazonica as reference has previously been softmasked and ran through the make_lastz_chains pipeline. 
+
+
+#### Opsanus beta genome obtained from NCBI:
+
+The genome obtained from NCBI is already softmasked.
+
+
+#### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
+
+Here, I will use Repeatmasker to softmask repeat sequences in ragtag assembly which used NCBI's O. beta genome as reference.
 
 ```
 mkdir obeta_ragatg_ncbi
@@ -225,3 +237,15 @@ module add Nextflow/21.10.6
 
 python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoperca_gobio Opsanus_beta /project/daane/hussain/final_project/raw_data/cgob_dna_sm.fa /project/daane/hussain/final_project/obeta_ncbi/obeta_ncbi_sm.fa --project_dir chain_obeta_cgob --executor slurm --executor_queuesize 210 --seq1_chunk 50000000 --seq2_chunk 10000000
 ```
+### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
+
+
+
+## Identify Orthologous Genes between O. beta and C. gobio using TOGA (by Michael Hiller Lab)
+
+### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
+
+### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
+
+### Opsanus beta genome obtained from NCBI
+
