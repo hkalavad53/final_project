@@ -272,11 +272,9 @@ python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoper
 ### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
 
 ```
-cd /project/daane/hussain/final_project/make_lastz_chains/obeta_ncbi/
+cd /project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi/
 touch chain_obet_cgob.sh
-cp /project/daane/hussain/repeatmask/notothenioids/cottoperca_gobio/cgob_dna_sm.fa /project/daane/hussain/final_project/raw_data/.
-# make_lastz_chains pipeline doesn't like periods or just long headers in general in fasta files
-python fasta_rename_remove_period.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa obeta_ncbi_sm.fa
+python fasta_rename_remove_period.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa obeta_ragtag_ncbi_sm.fa
 sbatch chain_obet_cgob.sh
 ```
 ```
