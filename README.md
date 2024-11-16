@@ -193,6 +193,10 @@ RepeatModeler -database obeta -threads 40 -LTRStruct
 RepeatMasker -lib obeta-families.fa -pa 28 -e rmblast -xsmall -dir . -s obeta_ragtag_ncbi.fa
 ```
 
+```
+cp /project/daane/hussain/final_project/repeatmask/obeta_ragatg_ncbi/obeta_ragtag_ncbi.fa.masked /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa
+```
+
 ### Run make_lastz_chains pipeline by Michael Hiler Lab to generate pairwise alignments between O. beta and Cottoperca gobio
 
 ```
@@ -203,6 +207,34 @@ mkdir obeta_ncbi
 mkdir obeta_ragtag_tama
 mkdir obeta_ragtag_ncbi
 ```
+
+The fasta headers were cleaned prior to running make_lastz_chains as periods and spaces are a big NO-NO in the fasta headers for these programs to process them.
+
+```
+python /project/daane/hussain/final_roject/make_lastz_chains/fasta_rename_remove_period.py /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa /project/daane/hussain/final_project/raw_data/out.fa
+```
+```
+import sys
+
+input_file = sys.argv[1]
+output_file= sys.argv[2]
+
+with open(input_file, "r") as input_f, open(output_file, "w") as output_f:
+    for line in input_f:
+        if line.startswith(">"):
+            header_components = line.strip().split(".")
+            header_components = header_components[:1]
+            modified_header =" ".join(header_components)
+            output_f.write(modified_header + "\n")
+        else:
+            output_f.write(line)
+```
+
+```
+mv /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa.orig
+mv /project/daane/hussain/final_project/raw_data/out.fa /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa
+```
+
 
 #### Opsanus beta genome scaffolded using T. amazonica as reference (using Ragtag)
 
@@ -239,7 +271,28 @@ python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoper
 ```
 ### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
 
+```
+cd /project/daane/hussain/final_project/make_lastz_chains/obeta_ncbi/
+touch chain_obet_cgob.sh
+cp /project/daane/hussain/repeatmask/notothenioids/cottoperca_gobio/cgob_dna_sm.fa /project/daane/hussain/final_project/raw_data/.
+# make_lastz_chains pipeline doesn't like periods or just long headers in general in fasta files
+python fasta_rename_remove_period.py /project/daane/hussain/final_project/raw_data/obeta_ncbi.fa obeta_ncbi_sm.fa
+sbatch chain_obet_cgob.sh
+```
+```
+#!/bin/bash
+#SBATCH -J chain_obeta_cgob
+#SBATCH -o chain_obeta_cgob.%j
+#SBATCH -t 120:00:00
+#SBATCH -N 1 -n 1
+#SBATCH --mem=10G
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
 
+module add Nextflow/21.10.6
+
+python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoperca_gobio Opsanus_beta /project/daane/hussain/final_project/raw_data/cgob_dna_sm.fa /project/daane/hussain/final_project/make_lastz_chains/obeta_ncbi/obeta_ncbi_sm.fa --project_dir chain_obeta_cgob --executor slurm --executor_queuesize 210 --seq1_chunk 50000000 --seq2_chunk 10000000
+```
 
 ## Identify Orthologous Genes between O. beta and C. gobio using TOGA (by Michael Hiller Lab)
 
