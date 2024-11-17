@@ -298,6 +298,15 @@ python /project/daane/hussain/programs/make_lastz_chains/make_chains.py Cottoper
 
 TOGA has previously been run on this genome so I am copying the files here and staging some result files on github.
 
+```
+cd /project/daane/hussain/final_project
+mkdir TOGA
+cd TOGA
+mkdir obeta_ragtag_tama
+cd obeta_ragtag_tama
+cp -r /project/daane/hussain/repeatmask/batrachoidiformes/opsanus_beta/toga_obeta_cgob .
+```
+
 
 ### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
 
@@ -334,4 +343,47 @@ gunzip $basedir/chain_obeta_cgob/Cottoperca_gobio.Opsanus_beta.allfilled.chain.g
 
 ### Opsanus beta genome obtained from NCBI
 
+```
+cd /project/daane/hussain/final_project/TOGA
+mkdir obeta_ragtag_ncbi
+cd obeta__ragtag_ncbi
+touch toga_obeta_cgob.sh
+sbatch toga_obeta_cgob.sh
+```
+```
+#!/bin/bash
+#SBATCH -J chain_obeta_cgob
+#SBATCH -o chain_obeta_cgob.%j
+#SBATCH -t 120:00:00
+#SBATCH -N 1 -n 1
+#SBATCH --mem=10G
+#SBATCH --mail-user=hskalavad@gmail.com
+#SBATCH --mail-type=ALL
 
+module add Nextflow/21.10.6
+
+basedir=/project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi
+
+csh $basedir/chain_obeta_cgob/cleanUp.csh
+
+gunzip $basedir/chain_obeta_cgob/Cottoperca_gobio.Opsanus_beta.allfilled.chain.gz
+
+/project/daane/shared/TOGA/toga.py $basedir/chain_obeta_cgob/Cottoperca_gobio.Opsanus_beta.allfilled.chain /project/daane/hussain/final_project/TOGA/cgob_ragtag.bed $basedir/chain_obeta_cgob/Cottoperca_gobio.2bit $basedir/chain_obeta_cgob/Opsanus_beta.2bit --pn toga_obeta_cgob -i /project/daane/hussain/final_project/TOGA/cgob_ragtag_isoforms.txt --nc /project/daane/shared/TOGA/nextflow_config_files --cesar_buckets 2,5,10,50
+```
+
+I got this error when I ran this script with cgob.bed and cgob_isoforms.txt files first:
+
+```
+cat cesar_jobs_crashed.txt
+```
+
+```
+/project/daane/shared/TOGA/CESAR_wrapper.py ENSCGOT00000002507 38554 /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/toga_filt_ref_annot.hdf5 /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/genome_alignment.bst /project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi/chain_obeta_cgob/Cottoperca_gobio.2bit /project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi/chain_obeta_cgob/Opsanus_beta.2bit --cesar_binary /project/daane/shared/TOGA/CESAR2.0/cesar --uhq_flank 50 --temp_dir /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/cesar_temp_files --check_loss --alt_frame_del --memlim 2 CESAR JOB FAILURE       Input is corrupted! Reference sequence should start with ATG! Error! CESAR output is corrupted, target must start with ATG! Error! CESAR output is corrupted, target must start with ATG! Traceback (most recent call last):   File "/project/daane/shared/TOGA/CESAR_wrapper.py", line 2975, in <module>     realign_exons(cmd_args)   File "/project/daane/shared/TOGA/CESAR_wrapper.py", line 2940, in realign_exons     loss_report, del_mis_exons = inact_mut_check(                                  ^^^^^^^^^^^^^^^^   File "/project/daane/shared/TOGA/modules/inact_mut_check.py", line 1679, in inact_mut_check     split_stop_codons = detect_split_stops(                         ^^^^^^^^^^^^^^^^^^^   File "/project/daane/shared/TOGA/modules/inact_mut_check.py", line 1482, in detect_split_stops     position = exon_to_last_codon_of_exon[first_exon]                ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^ KeyError: 1
+```
+
+So, I ran these commands so this transcript is not processed by TOGA:
+
+```
+sed '/ENSCGOT00000002507/d' cgob.bed > cgob_ragtag.bed
+sed '/ENSCGOT00000002507/d' cgob_isoforms.txt > cgob_ragtag_isoforms.txt
+```
