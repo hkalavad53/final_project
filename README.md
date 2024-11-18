@@ -123,7 +123,9 @@ compleasm run -a /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi
 compleasm run -a /project/daane/hussain/final_project/raw_data/obeta_ragtag_tama.fa -o compleasm_obeta_ragtag_tama -l actinopterygii_odb10
 ```
 
-Compleasm results suggest that the genome completeness of two ragtag assemblies were not very different from each other. The NCBI reference genome has more single-copy complete genes compared to ragtag assemblies.
+#### Compleasm results suggest that the genome completeness of two ragtag assemblies were not very different from each other. The NCBI reference genome has more single-copy complete genes compared to ragtag assemblies.
+
+![compleasm.svg](https://github.com/hkalavad53/final_project/blob/main/figures/compleasm.svg)
 
 ## Create Pairwise Sequence Alignment with Cottoperca gobio genome using make_lastz_chains pipeline from Michael Hiller Lab
 
@@ -160,7 +162,7 @@ The ragtag assembly using T. amazonica as reference has previously been softmask
 
 #### Opsanus beta genome obtained from NCBI:
 
-The genome obtained from NCBI is already softmasked.
+The genome obtained from NCBI was already softmasked.
 
 
 #### Opsanus beta genome scaffolded using NCBI's O.beta genome as reference (using Ragtag)
@@ -198,6 +200,10 @@ RepeatMasker -lib obeta-families.fa -pa 28 -e rmblast -xsmall -dir . -s obeta_ra
 ```
 cp /project/daane/hussain/final_project/repeatmask/obeta_ragatg_ncbi/obeta_ragtag_ncbi.fa.masked /project/daane/hussain/final_project/raw_data/obeta_ragtag_ncbi_sm.fa
 ```
+
+#### Softmask percentages for teh ragtag assemblies was higher which suggests that there are redundant repeat sequences in my Hifi Reads.
+
+![softmask_table](https://github.com/hkalavad53/final_project/blob/main/figures/softmask_table.svg)
 
 ### Run make_lastz_chains pipeline by Michael Hiler Lab to generate pairwise alignments between O. beta and Cottoperca gobio
 
@@ -507,6 +513,11 @@ print(f"Number of genes with the same status in ncbi and ragtag_tama assemblies:
 print(f"Number of genes with the same status in both ragtag assemblies: {same_in_3_and_4}")
 print(f"Number of genes with the same status in all all assemblies: {same_in_all}")
 ```
+
+#### Ragtag assemblies had more common status between the two when compared to common status between ragtag assemblies and NCBI’s O. beta genome.
+
+![common_status](https://github.com/hkalavad53/final_project/blob/main/figures/common_status_table.svg)
+
 ```
 touch count_values.py
 python count_values.py obeta_summary.tsv
@@ -550,6 +561,14 @@ try:
             percentage = (count / total * 100) if total > 0 else 0
             print(f"  {value}: {count} ({percentage:.2f}%)")
 ```
+#### The ratio of gene intactness to loss events was similar in all three O. beta genomes. The ratio of lost kidney-associated genes was not significantly different than overall lost genes in O. beta genomes.
+
+![status_counts](https://github.com/hkalavad53/final_project/blob/main/figures/gene_status_toga.svg)
+
+#### Gene status for genes with common status between all O. beta genomes. 561 genes were intact, and 76 genes were lost. GeneRIF enrichment gave glomerular-related terms.
+
+![kidney_lost](https://github.com/hkalavad53/final_project/blob/main/figures/lost_genes.svg)
+
 
 ### Visualize Mutation
 
@@ -583,3 +602,6 @@ Gap Junction Alpha 1b gene (_gja1b_)
 /project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_ncbi.txt ENSCGOG00000004743 obeta_ragtag_ncbi_gja1b.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
 ```
 
+#### nphs1 and nphs2 were lost in all three assemblies and the mutation patterns are quite similar. gja1b had different status in one genome and mutation patterns reflected the ambiguity in genetic sequence for that gene in three assemblies.
+
+![mutation_plots](https://github.com/hkalavad53/final_project/blob/main/figures/mutation_plots.svg)
