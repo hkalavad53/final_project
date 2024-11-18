@@ -377,9 +377,9 @@ I got this error when I ran this script with cgob.bed and cgob_isoforms.txt file
 cat cesar_jobs_crashed.txt
 ```
 
-```
+
 /project/daane/shared/TOGA/CESAR_wrapper.py ENSCGOT00000002507 38554 /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/toga_filt_ref_annot.hdf5 /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/genome_alignment.bst /project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi/chain_obeta_cgob/Cottoperca_gobio.2bit /project/daane/hussain/final_project/make_lastz_chains/obeta_ragtag_ncbi/chain_obeta_cgob/Opsanus_beta.2bit --cesar_binary /project/daane/shared/TOGA/CESAR2.0/cesar --uhq_flank 50 --temp_dir /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/temp/cesar_temp_files --check_loss --alt_frame_del --memlim 2 CESAR JOB FAILURE       Input is corrupted! Reference sequence should start with ATG! Error! CESAR output is corrupted, target must start with ATG! Error! CESAR output is corrupted, target must start with ATG! Traceback (most recent call last):   File "/project/daane/shared/TOGA/CESAR_wrapper.py", line 2975, in <module>     realign_exons(cmd_args)   File "/project/daane/shared/TOGA/CESAR_wrapper.py", line 2940, in realign_exons     loss_report, del_mis_exons = inact_mut_check(                                  ^^^^^^^^^^^^^^^^   File "/project/daane/shared/TOGA/modules/inact_mut_check.py", line 1679, in inact_mut_check     split_stop_codons = detect_split_stops(                         ^^^^^^^^^^^^^^^^^^^   File "/project/daane/shared/TOGA/modules/inact_mut_check.py", line 1482, in detect_split_stops     position = exon_to_last_codon_of_exon[first_exon]                ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^ KeyError: 1
-```
+
 
 So, I ran these commands so this transcript is not processed by TOGA:
 
@@ -387,3 +387,197 @@ So, I ran these commands so this transcript is not processed by TOGA:
 sed '/ENSCGOT00000002507/d' cgob.bed > cgob_ragtag.bed
 sed '/ENSCGOT00000002507/d' cgob_isoforms.txt > cgob_ragtag_isoforms.txt
 ```
+
+## Processing TOGA Output Files
+
+### Kidney Gene List
+
+A list of kidney genes was made using Monarch Initiative website. The path to kidney genes is:
+```
+/project/daane/hussain/final_project/TOGA/kidney_genes.tsv
+```
+
+### Loss Summary
+
+```
+cd /project/daane/hussain/final_project/
+mkdir toga_results
+cd toga_results
+mkdir loss_summ_data
+cp /project/daane/hussain/final_project/TOGA/obeta_ncbi/toga_obeta_cgob/loss_summ_data.tsv obeta_ncbi.tsv
+cp /project/daane/hussain/final_project/TOGA/obeta_ragtag_tama/toga_obet_cgob/loss_summ_data.tsv obeta_ragtag_tama.tsv
+cp /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/loss_summ_data.tsv obeta_ragtag_ncbi.tsv
+touch toga_summary.py
+python toga_summary.py obeta_ncbi.tsv,obeta_ragtag_ncbi.tsv,obeta_ragtag_tama.tsv
+mv output.tsv obeta_summary.tsv
+```
+```
+import sys
+from collections import defaultdict
+dataDict = defaultdict(dict)
+specList=[]
+
+# Check if command line arguments are provided
+if len(sys.argv) < 2:
+    print("Usage: python script.py file1.tsv,file2.tsv,file3.tsv")
+    sys.exit(1)
+
+# Get the comma-separated list of file paths from command line arguments
+fileList = sys.argv[1].split(',')
+
+for infile in fileList:
+    spec=infile.split('.')[0]
+    specList.append(spec)
+    for line in open(infile):
+        f=line.strip('\n').split('\t')
+        if f[0]=="GENE":
+            gene,result=f[1],f[2]
+            dataDict[gene][spec]= result
+
+with open('output.tsv', 'w') as outfile:
+    header = "GENE\t" + "\t".join(specList)
+    print(header, file=outfile)
+    for gene in dataDict:
+        row = gene
+        for species in specList:
+            result = dataDict[gene].get(species)
+            if result is None:
+                result = 'NA'
+            row += "\t" + result
+        print(row, file=outfile)
+```
+
+```
+touch toga_filter_kidney_genes.py
+python toga_filter_kidney_genes.py obeta_summary.tsv
+mv test.txt obeta_kidney_summary.tsv
+sed -i '/^$/d' obeta_kidney_summary.tsv
+```
+```
+import sys
+infile= sys.argv[1]
+#Kidney Genes
+geneList=['ENSCGOG00000000106','ENSCGOG00000000153',......./<too_long>/.......'ENSCGOG00000024645','ENSCGOG00000024660','ENSCGOG00000024687','ENSCGOG00000024740']
+for line in open(infile):
+    f=line.strip('\n').split('\t')
+    if f[0]=='GENE':
+        print(line, file=open('test.txt','a'))
+    else:
+        if f[0] in geneList:
+            print(line,file=open('test.txt','a'))
+```
+
+```
+touch count_common_status.py
+python count_common_status.py obeta_summary.tsv
+python count_common_status.py obeta_kidney_summary.tsv 
+```
+```
+import sys
+
+if len(sys.argv) < 2:
+    print("Usage: python script.py <file_name>")
+    sys.exit(1)
+
+file_name = sys.argv[1]
+
+same_in_2_and_3 = 0
+same_in_2_and_4 = 0
+same_in_3_and_4 = 0
+same_in_all = 0
+
+with open(file_name, 'r') as f:
+    header = f.readline()
+    for line in f:
+        columns = line.strip().split('\t')
+        col2, col3, col4 = columns[1], columns[2], columns[3]
+        if col2 == col3:
+            same_in_2_and_3 += 1
+        if col2 == col4:
+            same_in_2_and_4 += 1
+        if col3 == col4:
+            same_in_3_and_4 += 1
+        if col2 == col3 == col4:
+            same_in_all += 1
+
+print(f"Number of genes with the same status in ncbi and ragtag_ncbi assemblies: {same_in_2_and_3}")
+print(f"Number of genes with the same status in ncbi and ragtag_tama assemblies: {same_in_2_and_4}")
+print(f"Number of genes with the same status in both ragtag assemblies: {same_in_3_and_4}")
+print(f"Number of genes with the same status in all all assemblies: {same_in_all}")
+```
+```
+touch count_values.py
+python count_values.py obeta_summary.tsv
+python count_values.py obeta_kidney_summary.tsv
+```
+```
+import sys
+from collections import defaultdict
+
+file_name = sys.argv[1]
+
+possible_values = ['I', 'L', 'UL', 'PI', 'M', 'PG', 'PM']
+
+try:
+    column_counts = defaultdict(lambda: defaultdict(int))
+
+    # Open and read the file
+    with open(file_name, 'r') as f:
+        header = f.readline().strip().split('\t')
+        num_columns = len(header)
+
+        # Initialize counts for each value in each column
+        for col_idx in range(num_columns):
+            for value in possible_values:
+                column_counts[col_idx][value] = 0
+
+        # Count occurrences of each value in each column
+        for line in f:
+            columns = line.strip().split('\t')
+            for col_idx, value in enumerate(columns):
+                if value in possible_values:
+                    column_counts[col_idx][value] += 1
+
+    # Print count and percentage of each value in each column
+    print("Count and percentage of each value in each column:")
+    for col_idx, col_name in enumerate(header):
+        total = sum(column_counts[col_idx].values())  # Total count for the column
+        print(f"\n{col_name}:")
+        for value in possible_values:
+            count = column_counts[col_idx][value]
+            percentage = (count / total * 100) if total > 0 else 0
+            print(f"  {value}: {count} ({percentage:.2f}%)")
+```
+
+### Visualize Mutation
+
+```
+cd /project/daane/hussain/final_project/toga_results/
+mkdir inact_mut_data
+cd inact_mut_data/
+cp /project/daane/hussain/final_project/TOGA/obeta_ncbi/toga_obeta_cgob/inact_mut_data.txt obeta_ncbi.txt
+cp /project/daane/hussain/final_project/TOGA/obeta_ragtag_tama/toga_obet_cgob/inact_mut_data.txt obeta_ragtag_tama.txt
+cp /project/daane/hussain/final_project/TOGA/obeta_ragtag_ncbi/toga_obeta_cgob/inact_mut_data.txt obeta_ragtag_ncbi.txt
+```
+
+Nephrin gene (_nphs1_)
+```
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ncbi.txt ENSCGOG00000009181 obeta_ncbi_nphs1.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_tama.txt ENSCGOG00000009181 obeta_ragtag_tama_nphs1.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_ncbi.txt ENSCGOG00000009181 obeta_ragtag_ncbi_nphs1.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+```
+
+Podocin gene (_nphs2_)
+```
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ncbi.txt ENSCGOG00000011639 obeta_ncbi_nphs2.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_tama.txt ENSCGOG00000011639 obeta_ragtag_tama_nphs2.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_ncbi.txt ENSCGOG00000011639 obeta_ragtag_ncbi_nphs2.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+```
+
+Gap Junction Alpha 1b gene (_gja1b_)
+```
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ncbi.txt ENSCGOG00000004743 obeta_ncbi_gja1b.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_tama.txt ENSCGOG00000004743 obeta_ragtag_tama_gja1b.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+/project/daane/shared/TOGA/supply/plot_mutations.py /project/daane/hussain/final_project/TOGA/cgob.bed obeta_ragtag_ncbi.txt ENSCGOG00000004743 obeta_ragtag_ncbi_gja1b.svg -i /project/daane/hussain/final_project/TOGA/cgob_isoforms.txt
+```
+
